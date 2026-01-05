@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 
-/* ================== UNITS BY GRADE (GLOBAL SUCCESS 10–12) ================== */
+/* ================== UNITS BY GRADE ================== */
 const unitsByGrade: Record<string, string[]> = {
   "10": [
     "Unit 1: Family Life",
@@ -61,64 +61,74 @@ type Skill =
   | "Communication & Culture / CLIL"
   | "Looking Back + Project";
 
-/* ================== SKILL LOGIC (MOVED OUTSIDE) ================== */
+/* ================== SKILL LOGIC ================== */
 const skillLogic: Record<Skill, string> = {
-  Vocabulary: `
-Create a VOCABULARY WORKSHEET with academic depth.
-Include presentation, controlled practice, contextualised use.
-Assessment focus: accuracy, meaning, exam-oriented usage.
-`,
-  Grammar: `
-Create a GRAMMAR PRACTICE WORKSHEET.
-Include form–use–meaning explanation, comparison if needed,
-controlled → guided → contextualised practice.
-Assessment focus: accuracy and application.
-`,
-  "Getting Started": `
-Create an INTRODUCTORY ACTIVITY SHEET.
-Include lead-in visuals, prediction tasks, short listening/reading,
-and initial discussion to activate background knowledge.
-`,
-  Reading: `
-Create a READING COMPREHENSION WORKSHEET.
-Include pre-reading, skimming, scanning, inference,
-and post-reading discussion.
-Assessment focus: main ideas, details, strategies.
-`,
-  Speaking: `
-Create a SPEAKING PRACTICE WORKSHEET.
-Include preparation, guided interaction, freer speaking,
-and optional support.
-Assessment focus: fluency, pronunciation, coherence.
-`,
-  Listening: `
-Create a LISTENING COMPREHENSION WORKSHEET.
-Include pre-listening, gist/detail listening tasks,
-and post-listening reflection.
-`,
-  Writing: `
-Create a WRITING TASK WORKSHEET.
-Include model text, language focus, guided writing,
-independent task, and checklist.
-Assessment focus: organisation, accuracy, task fulfilment.
-`,
-  "Communication & Culture / CLIL": `
-Create an INTEGRATED CONTENT–LANGUAGE WORKSHEET.
-Include cultural or CLIL content, comprehension,
-comparison, and application task.
-`,
-  "Looking Back + Project": `
-Create a REVIEW AND PROJECT WORKSHEET.
-Include language & skills review, project steps,
-and optional self/peer assessment.
-`,
+  Vocabulary: "Create a VOCABULARY WORKSHEET with presentation and practice.",
+  Grammar: "Create a GRAMMAR PRACTICE WORKSHEET from form to use.",
+  "Getting Started": "Create a lead-in and activation activity.",
+  Reading: "Create a READING COMPREHENSION WORKSHEET.",
+  Speaking: "Create a SPEAKING PRACTICE WORKSHEET.",
+  Listening: "Create a LISTENING COMPREHENSION WORKSHEET.",
+  Writing: "Create a WRITING TASK WORKSHEET.",
+  "Communication & Culture / CLIL":
+    "Create an integrated culture or CLIL worksheet.",
+  "Looking Back + Project":
+    "Create a review and project-based worksheet.",
 };
+
+/* ================== PROMPT BOX ================== */
+function PromptBox({ text }: { text: string }) {
+  return (
+    <div
+      style={{
+        border: "1px solid #d1d5db",
+        background: "#f9fafb",
+        padding: "10px 14px",
+        margin: "8px 0 14px",
+        fontSize: 14,
+        lineHeight: 1.6,
+        borderRadius: 6,
+      }}
+    >
+      {text}
+    </div>
+  );
+}
+
+/* ================== PROGRESS BAR ================== */
+function ProgressBar({ step }: { step: number }) {
+  return (
+    <div style={{ margin: "20px 0" }}>
+      <div style={{ fontSize: 14, marginBottom: 6 }}>
+        Learning Progress: Step {step} / 3
+      </div>
+      <div
+        style={{
+          height: 8,
+          background: "#e5e7eb",
+          borderRadius: 4,
+        }}
+      >
+        <div
+          style={{
+            height: "100%",
+            width: `${(step / 3) * 100}%`,
+            background: "#2563eb",
+            borderRadius: 4,
+          }}
+        />
+      </div>
+    </div>
+  );
+}
 
 export default function Page() {
   const [grade, setGrade] = useState("10");
   const [unit, setUnit] = useState("");
   const [skill, setSkill] = useState<Skill>("Vocabulary");
   const [copied, setCopied] = useState(false);
+
+  const step = unit ? 3 : grade ? 2 : 1;
 
   const generatePrompt = async () => {
     if (!unit) {
@@ -127,54 +137,37 @@ export default function Page() {
     }
 
     const prompt = `
-You are Mr. Cảnh’s AI Teaching Assistant, specializing in designing
-high-quality, visual, and interactive English learning materials
-for Vietnamese upper secondary students (Grades 10–12).
-
-Aligned with the MOET Global Success curriculum (CTGDPT 2018),
-competency-based teaching and assessment,
-and THPTQG orientation.
-
 GRADE: ${grade}
-SUBJECT: English (Upper Secondary – Vietnam)
 UNIT: ${unit}
-SKILL FOCUS: ${skill}
+SKILL: ${skill}
 
 TASK:
 ${skillLogic[skill]}
-
-DESIGN & INTERACTION:
-- Large fonts, clear hierarchy
-- Canva-style cards
-- Explanations before practice
-- Interactive quizzes
-  ✓ Correct → GREEN
-  ✗ Incorrect → RED
-- Friendly feedback
-
-PEDAGOGICAL ALIGNMENT:
-Communicative, linguistic, strategic, and intercultural competence.
-
-TEACHER INFO:
-Name: CANH IT
-Contact: 0988 809 539
-School: Ba Trang Primary & Secondary Boarding School
-Address: Đặng Thùy Trâm Commune, Quang Ngai Province
 `.trim();
 
     await navigator.clipboard.writeText(prompt);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2500);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <main style={{ maxWidth: 1000, margin: "40px auto", fontFamily: "Arial" }}>
-      <header style={{ textAlign: "center", marginBottom: 40 }}>
-        <h1>🎓 Mr. Cảnh’s AI Teaching Assistant</h1>
-        <p>High-Quality English Learning Materials | Grades 10–12</p>
+    <main
+      style={{
+        maxWidth: 900,
+        margin: "40px auto",
+        fontFamily: "Arial, sans-serif",
+      }}
+    >
+      <header style={{ textAlign: "center", marginBottom: 30 }}>
+        <h1>Mr. Cảnh’s AI Teaching Assistant</h1>
+        <p>English Learning Materials | Grades 10–12</p>
       </header>
 
+      <ProgressBar step={step} />
+
+      {/* STEP 1 */}
       <label>STEP 1 — Choose Grade</label>
+      <PromptBox text="Select the student grade level. This defines curriculum scope and difficulty." />
       <select
         value={grade}
         onChange={(e) => {
@@ -188,9 +181,11 @@ Address: Đặng Thùy Trâm Commune, Quang Ngai Province
         <option value="12">Grade 12</option>
       </select>
 
-      <label style={{ marginTop: 16, display: "block" }}>
+      {/* STEP 2 */}
+      <label style={{ marginTop: 20, display: "block" }}>
         STEP 2 — Choose Unit
       </label>
+      <PromptBox text="Choose the textbook unit. Content will strictly follow this unit." />
       <select
         value={unit}
         onChange={(e) => setUnit(e.target.value)}
@@ -204,9 +199,11 @@ Address: Đặng Thùy Trâm Commune, Quang Ngai Province
         ))}
       </select>
 
-      <label style={{ marginTop: 16, display: "block" }}>
+      {/* STEP 3 */}
+      <label style={{ marginTop: 20, display: "block" }}>
         STEP 3 — Choose Skill Focus
       </label>
+      <PromptBox text="Select the main skill or lesson section to generate focused materials." />
       <select
         value={skill}
         onChange={(e) => setSkill(e.target.value as Skill)}
@@ -224,19 +221,16 @@ Address: Đặng Thùy Trâm Commune, Quang Ngai Province
         style={{
           marginTop: 30,
           width: "100%",
-          padding: 16,
-          fontSize: 18,
+          padding: 14,
+          fontSize: 16,
           background: copied ? "#16a34a" : "#1e3a8a",
           color: "white",
           border: "none",
-          borderRadius: 8,
+          borderRadius: 6,
         }}
       >
-        {copied
-          ? "✔ LESSON GENERATED & COPIED"
-          : "🎯 GENERATE MY LESSON MATERIAL"}
+        {copied ? "✔ Prompt Copied" : "Generate Lesson Prompt"}
       </button>
     </main>
   );
 }
-
