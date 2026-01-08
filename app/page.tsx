@@ -1,7 +1,8 @@
 "use client";
+
 import { useState } from "react";
 
-/* ================== UNITS BY GRADE (GLOBAL SUCCESS 10–12) ================== */
+/* ================== UNITS BY GRADE ================== */
 const unitsByGrade: Record<string, string[]> = {
   "10": [
     "Unit 1: Family Life",
@@ -63,112 +64,16 @@ type Skill =
 
 /* ================== SKILL LOGIC ================== */
 const skillLogic: Record<Skill, string> = {
-  Vocabulary: `
-Create a VOCABULARY WORKSHEET with academic depth.
-Include presentation, controlled practice, contextualised use.
-Assessment focus: accuracy, meaning, exam-oriented usage.
-`,
-  Grammar: `
-Create a GRAMMAR PRACTICE WORKSHEET.
-Include form–use–meaning explanation, comparison if needed,
-controlled → guided → contextualised practice.
-Assessment focus: accuracy and application.
-`,
-  "Getting Started": `
-Create an INTRODUCTORY ACTIVITY SHEET.
-Include lead-in visuals, prediction tasks, short listening/reading,
-and initial discussion to activate background knowledge.
-`,
-  Reading: `
-Create a READING COMPREHENSION WORKSHEET.
-Include pre-reading, skimming, scanning, inference,
-and post-reading discussion.
-Assessment focus: main ideas, details, strategies.
-`,
-  Speaking: `
-Create a SPEAKING PRACTICE WORKSHEET.
-Include preparation, guided interaction, freer speaking,
-and optional support.
-Assessment focus: fluency, pronunciation, coherence.
-`,
-  Listening: `
-Create a LISTENING COMPREHENSION WORKSHEET.
-Include pre-listening, gist/detail listening tasks,
-and post-listening reflection.
-`,
-  Writing: `
-Create a WRITING TASK WORKSHEET.
-Include model text, language focus, guided writing,
-independent task, and checklist.
-Assessment focus: organisation, accuracy, task fulfilment.
-`,
-  "Communication & Culture / CLIL": `
-Create an INTEGRATED CONTENT–LANGUAGE WORKSHEET.
-Include cultural or CLIL content, comprehension,
-comparison, and application task.
-`,
-  "Looking Back + Project": `
-Create a REVIEW AND PROJECT WORKSHEET.
-Include language & skills review, project steps,
-and optional self/peer assessment.
-`,
+  Vocabulary: "Create a VOCABULARY WORKSHEET with presentation and practice.",
+  Grammar: "Create a GRAMMAR PRACTICE WORKSHEET with form–use–meaning.",
+  "Getting Started": "Create an INTRODUCTORY ACTIVITY SHEET.",
+  Reading: "Create a READING COMPREHENSION WORKSHEET.",
+  Speaking: "Create a SPEAKING PRACTICE WORKSHEET.",
+  Listening: "Create a LISTENING COMPREHENSION WORKSHEET.",
+  Writing: "Create a WRITING TASK WORKSHEET.",
+  "Communication & Culture / CLIL": "Create a CLIL worksheet.",
+  "Looking Back + Project": "Create a REVIEW AND PROJECT worksheet.",
 };
-
-/* ================== UI COMPONENTS ================== */
-function PromptBox({ text }: { text: string }) {
-  return (
-    <div
-      style={{
-        border: "1px solid #d1d5db",
-        background: "#f9fafb",
-        padding: "10px 14px",
-        margin: "8px 0 14px",
-        fontSize: 14,
-        lineHeight: 1.6,
-        borderRadius: 6,
-      }}
-    >
-      {text}
-    </div>
-  );
-}
-
-function LearningProgress({
-  grade,
-  unit,
-  skill,
-}: {
-  grade: string;
-  unit: string;
-  skill: Skill;
-}) {
-  if (!grade) return null;
-
-  let text = "Grade selected.";
-
-  if (grade && unit) {
-    text = "Grade and unit selected.";
-  }
-
-  if (grade && unit && skill) {
-    text = "Grade, unit, and skill selected. Ready to generate lesson material.";
-  }
-
-  return (
-    <div
-      style={{
-        marginBottom: 20,
-        padding: "10px 14px",
-        border: "1px dashed #94a3b8",
-        background: "#f8fafc",
-        fontSize: 14,
-        borderRadius: 6,
-      }}
-    >
-      <strong>Learning Progress:</strong> {text}
-    </div>
-  );
-}
 
 /* ================== PAGE ================== */
 export default function Page() {
@@ -184,83 +89,60 @@ export default function Page() {
     }
 
     const prompt = `
-You are Mr. Cảnh’s AI Teaching Assistant, specializing in designing
-high-quality, visual, and interactive English learning materials
-for Vietnamese upper secondary students (Grades 10–12).
-
-Aligned with the MOET Global Success curriculum (CTGDPT 2018),
-competency-based teaching and assessment,
-and THPTQG orientation.
+You are Mr. Cảnh’s AI Teaching Assistant.
 
 GRADE: ${grade}
-SUBJECT: English (Upper Secondary – Vietnam)
+SUBJECT: English (Vietnam Upper Secondary)
 UNIT: ${unit}
 SKILL FOCUS: ${skill}
 
 TASK:
 ${skillLogic[skill]}
 
-DESIGN & INTERACTION:
-- Large fonts, clear hierarchy
-- Canva-style cards
-- Explanations before practice
-- Interactive quizzes
-  ✓ Correct → GREEN
-  ✗ Incorrect → RED
-- Friendly feedback
-
-PEDAGOGICAL ALIGNMENT:
-Communicative, linguistic, strategic, and intercultural competence.
-
-TEACHER INFO:
-Name: CANH IT
-Contact: 0988 809 539
-School: Ba Trang Primary & Secondary Boarding School
-Address: Đặng Thùy Trâm Commune, Quang Ngai Province
+Design visually rich, student-friendly materials aligned with MOET Global Success.
 `.trim();
 
     await navigator.clipboard.writeText(prompt);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2500);
+
+    // ✅ CLEAR TEACHER INSTRUCTION
+    alert(
+      "✅ Prompt copied!\n\n" +
+        "Next steps in Canva:\n" +
+        "1️⃣ Click the AI Code input box\n" +
+        "2️⃣ Press Ctrl + V (Cmd + V on Mac)\n" +
+        "3️⃣ Click Generate"
+    );
+
+    // ✅ OPEN CANVA IN NEW TAB
+    window.open("https://www.canva.com/ai/code", "_blank");
   };
 
   return (
     <main style={{ maxWidth: 900, margin: "40px auto", fontFamily: "Arial" }}>
-      <header style={{ textAlign: "center", marginBottom: 30 }}>
-        <h2 style={{ marginBottom: 4 }}>PTDTBT TH & THCS Ba Trang</h2>
-        <p style={{ marginTop: 0, fontSize: 14 }}>
-          Xã Đặng Thùy Trâm, Quảng Ngãi
-        </p>
-        <h1 style={{ marginTop: 20 }}>
-          🎓 Mr. Cảnh’s Canva AI Teaching Assistant
-        </h1>
-      </header>
-
-      <LearningProgress grade={grade} unit={unit} skill={skill} />
+      <h1 style={{ textAlign: "center" }}>
+        🎓 Mr. Cảnh’s Canva AI Teaching Assistant
+      </h1>
 
       <label><strong>Grade</strong></label>
-      <PromptBox text="Select the student grade level. This determines curriculum scope and task difficulty." />
       <select
         value={grade}
         onChange={(e) => {
           setGrade(e.target.value);
           setUnit("");
         }}
-        style={{ width: "100%", padding: 10 }}
+        style={{ width: "100%", padding: 10, marginBottom: 20 }}
       >
         <option value="10">Grade 10</option>
         <option value="11">Grade 11</option>
         <option value="12">Grade 12</option>
       </select>
 
-      <label style={{ marginTop: 20, display: "block" }}>
-        <strong>Unit</strong>
-      </label>
-      <PromptBox text="Choose the unit from the official textbook. Generated content follows this unit strictly." />
+      <label><strong>Unit</strong></label>
       <select
         value={unit}
         onChange={(e) => setUnit(e.target.value)}
-        style={{ width: "100%", padding: 10 }}
+        style={{ width: "100%", padding: 10, marginBottom: 20 }}
       >
         <option value="">-- Select a unit --</option>
         {unitsByGrade[grade].map((u) => (
@@ -270,10 +152,7 @@ Address: Đặng Thùy Trâm Commune, Quang Ngai Province
         ))}
       </select>
 
-      <label style={{ marginTop: 20, display: "block" }}>
-        <strong>Skill Focus</strong>
-      </label>
-      <PromptBox text="Select the main language skill or lesson section to generate focused teaching materials." />
+      <label><strong>Skill Focus</strong></label>
       <select
         value={skill}
         onChange={(e) => setSkill(e.target.value as Skill)}
@@ -299,22 +178,8 @@ Address: Đặng Thùy Trâm Commune, Quang Ngai Province
           borderRadius: 6,
         }}
       >
-        {copied ? "✔ PROMPT COPIED" : "GENERATE & COPY PROMPT"}
+        {copied ? "✔ PROMPT COPIED" : "GENERATE LESSON MATERIAL"}
       </button>
     </main>
   );
-}
-import { GetServerSideProps } from "next";
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  return {
-    redirect: {
-      destination: "https://www.canva.com/ai/code",
-      permanent: false,
-    },
-  };
-};
-
-export default function Home() {
-  return null;
 }
