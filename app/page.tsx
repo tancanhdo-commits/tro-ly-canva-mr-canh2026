@@ -304,3 +304,17 @@ Address: Đặng Thùy Trâm Commune, Quang Ngai Province
     </main>
   );
 }
+import { GetServerSideProps } from "next";
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  return {
+    redirect: {
+      destination: "https://www.canva.com/ai/code",
+      permanent: false,
+    },
+  };
+};
+
+export default function Home() {
+  return null;
+}
